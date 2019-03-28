@@ -1,0 +1,1 @@
+TRUNCATE TABLE equality_diversity;

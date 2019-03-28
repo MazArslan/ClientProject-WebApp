@@ -1,0 +1,40 @@
+    # references: 
+    # Assessment starter for individual project (Commercial applications with java)
+    # https://flywaydb.org/getstarted/firststeps/gradle accessed on 10/11/2018
+    # https://docs.gitlab.com/ee/ci/services/mysql.html accessed 10/11/2018
+    # https://docs.gitlab.com/ee/ci/junit_test_reports.html accessed 10/11/2018
+    image: openjdk:10-jdk 
+    services:
+        - mysql:latest
+
+    variables:
+        # Configure mysql environment variables (https://hub.docker.com/r/_/mysql/)
+        MYSQL_DATABASE: clientproject
+        MYSQL_ROOT_PASSWORD: comsc
+    stages:
+    - test
+    before_script:
+            - apt-get update
+            - apt-get install -y mysql-client
+            - echo $GRADLE_HOME
+            - echo `pwd`
+            - export GRADLE_USER_HOME=`pwd`/.gradle
+            - rm -f  .gradle/caches/modules-2/modules-2.lock
+            - rm -fr .gradle/caches/*/plugin-resolution/
+            - chmod +x gradlew
+            - ./gradlew flywayMigrate -i -Pflyway.url=jdbc:mysql://mysql/$MYSQL_DATABASE -Pflyway.user=root -Pflyway.password=$MYSQL_ROOT_PASSWORD
+            - touch output.sql
+            - mysqldump --routines $MYSQL_DATABASE -u root -p$MYSQL_ROOT_PASSWORD -h mysql > output.sql
+            - cat output.sql
+
+    test:unit:
+            stage: test
+            script: ./gradlew test --stacktrace -PtestsProfile=ci
+            artifacts:
+                reports:
+                    junit: build/test-results/test/TEST-*.xml
+                paths:
+                - output.sql
+                expire_in: 1 week
+
+    

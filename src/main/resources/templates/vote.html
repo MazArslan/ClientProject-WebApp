@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+
+</head>
+<body>
+<div th:replace="base :: header"></div>
+<div id="add-form" class="jumbotron">
+    <div id="vote-form">
+        <h2 id="testing-mode-heading" style="display:none">Testing mode</h2>
+        <div class="vote-img-wrapper">
+            <div class="grid-wrap">
+                <img class="vote-img"
+                     id="vote-img">
+                <img id="additional-image-1" class="additional-image">
+                <img id="additional-image-2" class="additional-image">
+            </div>
+
+        </div>
+        <div>
+            <a class="btn btn-danger vote-btn" id="vote-no">NO</a><a class="btn btn-success vote-btn"
+                                                                     id="vote-yes">YES</a>
+            <a class="btn btn-warning" id="skip-btn">Skip</a>
+            <a class="btn btn-info" id="redo-tutorial">Redo tutorial.</a>
+        </div>
+    </div>
+    <div id="encouragement" style="text-align:center; display:none">
+        <img id="encouragement-img"><br>
+        <div id="encouragement-text"></div>
+
+        <a class="btn btn-success vote-btn" id="encouragement-btn">Continue</a>
+        <a class="btn btn-warning vote-btn" id="logout-btn" href="/logout">Logout</a>
+    </div>
+</div>
+<script>
+    let inSampleImagePhase = true;
+    let id = 0;
+    let sampleImages = {};
+    let numberOfImages = 0;
+    let sampleImageProgress = 0;
+    let correctSampleGuesses = 0;
+
+
+    function getNewImage() {
+        if (inSampleImagePhase) {
+            if (sampleImageProgress === sampleImages.length) {
+                endSampleImagePhase();
+
+            } else {
+                $('#vote-img').attr('src', sampleImages[sampleImageProgress].path);
+                $('#additional-image-1').attr('src', sampleImages[sampleImageProgress].additionalImages[0]);
+                $('#additional-image-2').attr('src', sampleImages[sampleImageProgress].additionalImages[1]);
+
+            }
+        } else {
+            numberOfImages++;
+            $.get({
+                url: '/api/voting/image',
+                data: {numberOfImages: numberOfImages},
+                success: function (data) {
+                    if (data.numberOfImages) {
+                        $('#vote-form').css('display', 'none');
+                        $('#encouragement').css('display', 'block');
+                        $('#encouragement-text').html(data.text);
+                        $('#encouragement-img').attr('src', data.path);
+                        if (data.logoutButton) {
+                            $('#logout-btn').css('display', 'block');
+                        } else {
+                            $('#logout-btn').css('display', 'none');
+
+                        }
+                    } else {
+                        id = data.id;
+                        $('#vote-img').attr('src', data.path);
+                        $('#additional-image-1').attr('src', data.additionalImages[0]);
+                        $('#additional-image-2').attr('src', data.additionalImages[1]);
+
+                    }
+                }
+            });
+        }
+
+    }
+
+    function vote(isUp) {
+        if (inSampleImagePhase) {
+            voteForSampleImage(isUp);
+            getNewImage();
+        } else {
+            $.post({
+                url: '/api/voting/vote/' + id,
+                data: {isUp: isUp},
+                success: function () {
+                    getNewImage();
+                }
+            });
+        }
+
+    }
+
+    function handleEncouragement() {
+        $('#vote-form').css('display', 'block');
+        $('#encouragement').css('display', 'none');
+        getNewImage();
+
+    }
+
+    function voteForSampleImage(isUp) {
+        if (sampleImages[sampleImageProgress].correct === isUp) {
+            correctSampleGuesses++;
+        }
+        sampleImageProgress++;
+
+    }
+
+    function endSampleImagePhase() {
+        inSampleImagePhase = false;
+        $.post('/api/tutorial/complete', {'name': 'SAMPLE_IMAGES', 'score': correctSampleGuesses});
+        alert('Congratulations! You got' + correctSampleGuesses + ' out of ' + sampleImages.length + ' correct!');
+        $('#testing-mode-heading').css('display', 'none');
+        getNewImage();
+    }
+
+    $(function () {
+        $.ajax({
+            url: '/api/tutorial/hasCompleted',
+            data: {name: 'SAMPLE_IMAGES'},
+            success(data) {
+                inSampleImagePhase = !data;
+                if (!inSampleImagePhase) {
+                    getNewImage();
+                } else {
+                    axios.get('/api/voting/sampleimages')
+                        .then(function (response) {
+                            sampleImages = response.data;
+                            getNewImage()
+                        });
+                    $('#testing-mode-heading').css('display', 'block');
+                }
+            }
+        });
+
+        $('#skip-btn').click(function () {
+            if (inSampleImagePhase) {
+                sampleImageProgress++;
+            }
+            getNewImage();
+        });
+        $('#vote-no').click(function () {
+            vote(false);
+        });
+
+        $('#vote-yes').click(function () {
+            vote(true);
+        });
+        $('#encouragement-btn').click(function () {
+            handleEncouragement();
+        })
+        $('#redo-tutorial').click(function () {
+            $.post({
+                url: '/api/tutorial/removeCompletion',
+                data: {'name': 'SAMPLE_IMAGES'},
+                success() {
+                    window.location.reload();
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>
+

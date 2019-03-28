@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+
+<div class="container">
+    <div class="jumbotron">
+        <div th:if="${error != null}" class="alert alert-danger"> Invalid data input!</div>
+        <form method="post" enctype="multipart/form-data">
+            Image: <input type="file" name="image" class="form-control-file"><br>
+            Additional images: <input type="file" name="additional" multiple><br>
+            Status <select name="trustworthy">
+            <option value="">Unknown</option>
+            <option value="TRUE">Known good</option>
+            <option value="FALSE">Known bad</option>
+        </select>
+            <input type="submit" class="btn btn-success" value="Add image">
+        </form>
+
+    </div>
+</div>
+</body>
+
+</html>

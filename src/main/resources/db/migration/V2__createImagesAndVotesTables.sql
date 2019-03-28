@@ -1,0 +1,11 @@
+CREATE TABLE images(
+image_id int AUTO_INCREMENT PRIMARY KEY,
+path VARCHAR(255) NOT NULL UNIQUE
+) ENGINE=INNODB;
+
+CREATE TABLE votes(
+vote_id int AUTO_INCREMENT PRIMARY KEY,
+is_vote_up tinyint(1) NOT NULL,
+FK_image_id int,
+FOREIGN KEY(FK_image_id) REFERENCES images(image_id) ON DELETE CASCADE
+);

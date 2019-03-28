@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+
+<div class="container">
+    <div class="jumbotron">
+
+        <h2>Admin Page</h2>
+        <h3>Welcome :
+            <span th:utext="${#request.userPrincipal.name}"></span>
+        </h3>
+        <h2 th:text="${image.path}"></h2>
+        <img th:src="${image.path}"><br>
+        Ranking: <span th:text="${image.ranking}"></span>
+        <br/>
+
+    </div>
+</div>
+</body>
+
+</html>

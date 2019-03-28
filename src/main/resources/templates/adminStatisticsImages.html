@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+
+<div class="container">
+    <div class="jumbotron">
+
+        <h2>Admin Page</h2>
+        <h3>Welcome :
+            <span th:utext="${#request.userPrincipal.name}"></span>
+        </h3>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Status</th>
+                <th>Known data</th>
+            </tr>
+            </thead>
+            <tr th:each="image: ${images}">
+                <td><a th:href="@{/admin/stats/images/{id}(id=${image.id})}" th:text="${image.path}"></a></td>
+                <td th:text="${image.description}"></td>
+                <td th:if="${image.knownStatus!=null}">
+                    <th:block th:if="${image.knownStatus==true}">Known good</th:block>
+                    <th:block th:if="${image.knownStatus==false}">Known bad</th:block>
+                </td>
+            </tr>
+        </table>
+
+        <br/>
+
+    </div>
+</div>
+</body>
+
+</html>

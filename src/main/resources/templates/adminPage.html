@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+
+<div class="container">
+    <div class="jumbotron">
+
+    <h2>Admin Page</h2>
+    <h3>Welcome :
+        <span th:utext="${#request.userPrincipal.name}"></span>
+    </h3>
+        <a href="/admin/stats/users">See user trustworthiness</a><br>
+        <a href="/admin/stats/images">See images</a><br>
+        <a href="/admin/stats/images/upload">Upload an image</a><br>
+        <a href="/admin/stats/download">Download all data</a>
+
+    <br/>
+
+    </div>
+</div>
+</body>
+
+</html>

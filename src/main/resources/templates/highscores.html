@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="base :: head">
+</head>
+<body>
+<script src="https://www.gstatic.com/charts/loader.js"></script>
+<div th:replace="base :: header"></div>
+
+
+<div class="container">
+    <div class="jumbotron">
+        <div id="highscores">
+
+        </div>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            // reference: https://developers.google.com/chart/interactive/docs/gallery/barchart
+            // accessed 30/11.2018
+
+            let highscores = /*[[${highscores}]]*/ [];
+            highscores = highscores.map(function (result) {
+                return [result.username, result.score];
+            });
+            highscores = [['Username', 'Score'],...highscores
+            ]
+            ;
+            console.log(highscores);
+            google.charts.load('current', {packages: ['corechart', 'bar']});
+            google.charts.setOnLoadCallback(drawHighscores);
+
+            function drawHighscores() {
+                var data = google.visualization.arrayToDataTable(highscores);
+                var options = {
+                    title: 'Scoring Board',
+                    // chartArea: {width: '50%'},
+                    hAxis: {
+                        title: 'Highscore',
+                        minValue: 0,
+                    },
+                    vAxis: {
+                        title: 'User',
+                    }
+                };
+                var chart = new google.visualization.BarChart(document.getElementById('highscores'));
+                chart.draw(data, options);
+            }
+
+            /*]]>*/
+        </script>
+    </div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+DROP FUNCTION get_image_ranking;

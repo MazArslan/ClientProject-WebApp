@@ -1,0 +1,2 @@
+TRUNCATE TABLE images;
+TRUNCATE TABLE votes;

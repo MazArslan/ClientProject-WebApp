@@ -1,0 +1,3 @@
+DROP FUNCTION select_user_trustworthiness;
+DROP TABLE user_trustworthiness_mv;
+DROP PROCEDURE update_trustworthiness_mv;

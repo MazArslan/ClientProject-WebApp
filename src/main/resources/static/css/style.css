@@ -1,0 +1,39 @@
+.vote-btn {
+    display: inline-block;
+    width: 40%;
+    margin: 5%;
+    padding: 5%;
+    color: #fff !important;
+    font-size: 200% !important;
+}
+
+.grid-wrap {
+    margin: 0 auto;
+    display: grid;
+    justify-content: center;
+    grid-auto-columns: 200px;
+    grid-auto-rows: 196px;
+    grid-template-areas: "a a b" "a a c";
+}
+
+#vote-img {
+    width: 100%;
+    grid-area: a;
+}
+
+#additional-image-1 {
+    width: 100%;
+    grid-area: b;
+}
+
+#additional-image-2 {
+    width: 100%;
+    grid-area: c;
+}
+
+.brain-image {
+    display: block;
+    width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+}

@@ -1,0 +1,2 @@
+ALTER TABLE votes
+  DROP COLUMN FK_user_id;

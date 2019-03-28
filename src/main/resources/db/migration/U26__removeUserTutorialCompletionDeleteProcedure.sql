@@ -1,0 +1,1 @@
+DROP PROCEDURE remove_user_tutorial_completion;

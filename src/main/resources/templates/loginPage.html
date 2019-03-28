@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="base :: head">
+</head>
+<body>
+<div th:replace="base :: header"></div>
+
+<div class="container">
+
+    <div class="jumbotron">
+
+        <h1>Login</h1>
+
+        <!-- /login?error=true -->
+        <div th:if="${#request.getParameter('error') == 'true'}"
+             class="alert alert-danger">
+            Login Failed<br/>
+            The error message was:
+            <span th:if="${#session!= null and #session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION') != null}"
+                  th:utext="${#session.getAttribute('SPRING_SECURITY_LAST_EXCEPTION').message}">
+                    Static summary
+             </span>
+
+        </div>
+
+        <h3>Enter user name and password:</h3>
+        <form name='f' th:action="@{/login}" method='POST'>
+            <table>
+                <tr>
+                    <td>User:</td>
+                    <td><input type='text' name='username' id="username" value=''></td>
+                </tr>
+                <tr>
+                    <td>Password:</td>
+                    <td><input type='password' name='password' id="password"/></td>
+                </tr>
+                <tr>
+                    <td><input name="submit" type="submit" value="submit" id="submit"/></td>
+                </tr>
+            </table>
+        </form>
+
+        <br>
+    </div>
+</div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+DROP TABLE equality_diversity;

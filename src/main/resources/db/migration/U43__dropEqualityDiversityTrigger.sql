@@ -1,0 +1,1 @@
+DROP TRIGGER validate_ethnicity;
